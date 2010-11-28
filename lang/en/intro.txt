@@ -1,0 +1,6 @@
+====== Authentication using Facebook ======
+
+From this page you can set up or unset the authentication backend which uses Facebook.
+
+To activate this backend, you must go to the configuration plugin page, and select "facebook" as 
+the authentication type, and fill the fields matching to configure the plugin fblogin.

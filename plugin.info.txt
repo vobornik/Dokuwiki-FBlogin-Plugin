@@ -1,0 +1,7 @@
+base   fblogin
+author Václav Voborník
+email  nomail@vobornik.eu
+date   2010-11-28
+name   Facebook login
+desc   Plugin to get authentication from Facebook
+url    http://www.dokuwiki.org/plugin:fblogin
