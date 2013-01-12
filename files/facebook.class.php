@@ -61,7 +61,7 @@ class auth_facebook extends auth_basic {
       'secret'     => $conf['plugin']['fblogin']['applicationSecret'],
       'cookie'     => true,
     ));
-    $fbsession = $facebook->getSession();
+    $fbsession = $facebook->getUser();
     
       if($_REQUEST['do'] == 'logout'){
         $logoutUrl = $facebook->getLogoutUrl(
@@ -70,16 +70,17 @@ class auth_facebook extends auth_basic {
           )
         );
         unset($fbsession);
-        unset($_SESSION[DOKU_COOKIE]['auth']['user']);
-        unset($_SESSION[DOKU_COOKIE]['auth']['pass']);
-        unset($_SESSION[DOKU_COOKIE]['auth']['info']);
+#        unset($_SESSION[DOKU_COOKIE]['auth']['user']);
+#        unset($_SESSION[DOKU_COOKIE]['auth']['buid']);
+#        unset($_SESSION[DOKU_COOKIE]['auth']['pass']);
+#        unset($_SESSION[DOKU_COOKIE]['auth']['info']);
+        session_destroy();
         error_log('fblogin : authenticated user redirected for logout to '.$logoutUrl);
         header("Location: ".$logoutUrl);
         exit;
       }
     if ($fbsession) {
       try {
-        $uid = $facebook->getUser();
         $me = $facebook->api('/me');
 #        $friends = $facebook->api('/me/friends');  // for future usage
 
@@ -92,7 +93,7 @@ class auth_facebook extends auth_basic {
         $USERINFO['name'] = $me['name'];
         $USERINFO['mail'] = $me['email'];
         $USERINFO['grps'] = array('user');
-        $user = $uid;
+        $user = $me['id'];
         $pass = '';
         $_SERVER['REMOTE_USER'] = $user;
         $_SESSION[DOKU_COOKIE]['auth']['user'] = $user;
@@ -106,6 +107,7 @@ class auth_facebook extends auth_basic {
       $loginUrl = $facebook->getLoginUrl(
         array(
           'next' => $_SERVER['HTTP_REFERER'],
+          'redirect_uri' => $conf['baseurl'],
           'canvas'    => 0,
           'fbconnect' => 1,
 #          'req_perms' => 'publish_stream,status_update'   //for future usage
@@ -155,7 +157,7 @@ class auth_facebook extends auth_basic {
       'secret'     => $conf['plugin']['fblogin']['applicationSecret'],
       'cookie'     => true,
     ));
-    $fbsession = $facebook->getSession();
+    $fbsession = $facebook->getUser();
 
     if ($fbsession) {
       try {
